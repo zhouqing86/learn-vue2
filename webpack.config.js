@@ -1,17 +1,52 @@
-// nodejs 中的path模块
 var path = require('path');
-var HtmlWebpackPlugin = require('html-webpack-plugin')
+var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var HTMLWebpackPlugin = require('html-webpack-plugin');
+
+var DEVELOPMENT = process.env.NODE_ENV === 'development';
+var PRODUCTION = process.env.NODE_ENV === 'production';
+
+var app = PRODUCTION
+        ? [
+            path.resolve(__dirname, 'app/index/index.js')
+          ]
+        : [
+            path.resolve(__dirname, 'app/index/index.js'),
+            'webpack-dev-server/client?http://localhost:8080/',
+            'webpack/hot/dev-server'
+          ]
+
+var plugins = PRODUCTION
+  ? [
+      new webpack.optimize.UglifyJsPlugin({
+        comments: false,
+        mangle: false,
+        compress: {
+          warnings: true
+        }
+      }),
+      new HTMLWebpackPlugin({
+        template: path.resolve(__dirname, 'app/index/index.html'),
+        inject: true
+      })
+    ]
+  : [
+      new webpack.HotModuleReplacementPlugin()
+    ];
+
+plugins.push(
+  new webpack.DefinePlugin({
+    DEVELOPMENT: JSON.stringify(DEVELOPMENT),
+    PRODUCTION: JSON.stringify(PRODUCTION)
+  })
+);
 
 module.exports = {
-    // 入口文件，path.resolve()方法，可以结合我们给定的两个参数最后生成绝对路径，最终指向的就是我们的index.js文件
-    entry: path.resolve(__dirname, 'app/index/index.js'),
-    // 输出配置
+    entry: app,
     output: {
-        // 输出路径是 myProject/output/static
         path: path.resolve(__dirname, 'build'),
-        publicPath: '/',
-        filename: '[name].[hash].js',
-        chunkFilename: '[id].[chunkhash].js'
+        publicPath: PRODUCTION ? '/' : '/assets/',
+        filename: PRODUCTION ? 'bundle.[hash:12].min.js' : 'bundle.js'
     },
     resolve: {
         extensions: ['.js', '.vue'],
@@ -34,10 +69,5 @@ module.exports = {
             }
         ]
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: path.resolve(__dirname, 'app/index/index.html'),
-            inject: true
-        })
-    ]
+    plugins: plugins
 }

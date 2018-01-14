@@ -1,6 +1,6 @@
 <template id="template-home">
   <div>
-    <div v-for="n in 10">div</div>
+    <div v-for="n in 5">div</div>
   </div>
 </template>
 
