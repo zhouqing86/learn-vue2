@@ -12,7 +12,7 @@ npm install webpack-cli
 
 ### Add CSS Loader
 
-为了能够将CSS做引入
+For compile CSS, introduce loaders
 ```
 npm install css-loader --save-dev
 npm install style-loader --save-dev
@@ -20,7 +20,7 @@ npm install style-loader --save-dev
 
 ### Add plugin
 
-为了提取CSS，引入plugin
+For extract CSS, introduce plugin
 ```
 npm install extract-text-webpack-plugin@next --save-dev
 ```
@@ -33,3 +33,16 @@ npm install --save-dev vue-loader vue-style-loader vue-template-compiler vue-hot
 npm install --save-dev babel babel-loader babel-core babel-plugin-transform-runtime babel-preset-es2015 babel-runtime
 
 ```
+
+### Add url loader and file loader to support image
+
+```
+npm install --save-dev url-loader file-loader
+```
+
+### Add production package support
+
+```
+npm install --save-dev webpack-merge html-webpack-plugin
+```
+
