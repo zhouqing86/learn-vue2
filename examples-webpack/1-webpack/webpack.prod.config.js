@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var HtmlwebpackPlugin = require ('html-webpack-plugin');
-var ExtractTextPlugin = require ('extract-text-webpack-plugin');
+var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var merge = require('webpack-merge');
 var webpackBaseConfig =require('./webpack.config.js');
 var VueLoaderPlugin = require('vue-loader/lib/plugin');
@@ -13,7 +13,10 @@ module.exports = merge(webpackBaseConfig, {
        filename: '[name].[hash:8].js'
     },
     plugins: [
-        new ExtractTextPlugin("[name].[hash:8].css"),
+        new MiniCssExtractPlugin({
+            filename: "[name].[hash:8].css",
+            chunkFilename: "[id].css"
+        }),
         new VueLoaderPlugin(),
         new webpack.DefinePlugin({
             'process.env': {

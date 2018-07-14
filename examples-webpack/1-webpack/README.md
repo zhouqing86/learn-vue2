@@ -46,3 +46,11 @@ npm install --save-dev url-loader file-loader
 npm install --save-dev webpack-merge html-webpack-plugin
 ```
 
+Replace extract-text-webpack plugin with mini-css-extract-plugin
+
+可以查看文档[https://www.npmjs.com/package/mini-css-extract-plugin](https://www.npmjs.com/package/mini-css-extract-plugin)
+
+```
+npm install mini-css-extract-plugin --save-dev
+```
+

@@ -1,6 +1,6 @@
 var path = require('path');
-var ExtractTextPlugin =require('extract-text-webpack-plugin');
 var VueLoaderPlugin = require('vue-loader/lib/plugin');
+var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 var config = {
     entry: {
@@ -15,13 +15,7 @@ var config = {
         rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-                    loaders: ExtractTextPlugin.extract({
-                        use: 'css-loader',
-                        fallback: 'vue-style-loader'
-                    })
-                }
+                loader: 'vue-loader'
             },
             {
                 test: /\.js$/,
@@ -30,10 +24,12 @@ var config = {
             },
             {
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    use: 'css-loader',
-                    fallback: 'style-loader'
-                })
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                    },
+                    "css-loader"
+                ]
             },
             {
                 test: /\.(gif|jpg|png|woff|svg|eot|ttf)\??.*$/,
@@ -42,7 +38,10 @@ var config = {
         ]
     },
     plugins: [
-        new ExtractTextPlugin("main.css"),
+        new MiniCssExtractPlugin({
+            filename: "main.css",
+            chunkFilename: "[id].css"
+        }),
         new VueLoaderPlugin()
     ]
 };
