@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bind</title>
+</head>
+<body>
+    <div id="app">
+        <div :class="{ 'active': isActive }">AAAA</div>
+    </div>
+    <div id="app2">
+        <button :class="classes">BBB</button>
+    </div>
+    <div id="app3">
+        <template v-if="type == 'name'">
+            <label>用户名</label>
+            <input placeholder="请输入用户名">
+        </template>
+        <template v-if="type == 'email'">
+            <label>邮箱</label>
+            <input placeholder="请输入邮箱号">
+        </template>
+        <button @click="handleToggleClick">切换输入类型</button>
+    </div>
+    <div id="app4">
+        点击次数 {{counter}}
+        <button @click="counter++">+ 1</button>
+    </div>
+    <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+           el: '#app',
+           data: {
+               isActive: true
+           }
+        });
+
+        var app2 = new Vue({
+            el: '#app2',
+            data: {
+                size: 'large',
+                disabled: true
+            },
+            computed: {
+                classes: function () {
+                    return [
+                        'btn',
+                        {
+                            ['btn' + this.size] : this.size != '',
+                            ['btn-disabled'] : this.disabled
+                        }
+                    ]
+                }
+            }
+        });
+
+        var app3 = new Vue({
+            el: '#app3',
+            data: {
+                type: 'name'
+            },
+            methods: {
+                handleToggleClick: function () {
+                    this.type = this.type == 'name' ? 'email' : 'name';
+                }
+            }
+        });
+
+        var app4 = new Vue({
+            el: '#app4',
+            data: {
+                counter: 0
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Components</title>
+</head>
+<body>
+    <div id="app">
+        <my-component></my-component>
+        <table>
+            <tbody is="child-component"></tbody>
+        </table>
+
+        <hr/>
+
+        受影响的组件: <br/>
+        <influence-component></influence-component>
+        <influence-component></influence-component>
+        <influence-component></influence-component>
+        <hr/>
+
+        独立组件不受影响: <br/>
+        <individual-component></individual-component>
+        <individual-component></individual-component>
+        <individual-component></individual-component>
+
+        <hr/>
+        组件间props传递: <br/>
+        <props-component warning-message="消息传递子组件"></props-component>
+        <input type="text" v-model="warningMessage" placeholder="请输入传递给子组件的消息">
+        <props-component :warning-message="warningMessage"></props-component>
+
+        注意： Vue2.x 通过props 传递数据是单向的了， 也就是
+        父组件数据变化时会传递给子组件，但是反过来不行。 <br/>
+        注意： 在JS中对象和数组是引用类型，指向同一个内存空间，所以props 是对象和数组时，在子组件内改变是会影响父纽件的。<br/>
+
+        <hr/>
+        组件props是对象的情况: <br/>
+        <props-obj-component prop-a="123"></props-obj-component>
+        当prop 验证失败时，在开发版本下会在控制台抛出一条警告。<br/>
+
+        <hr/>
+
+        子组件用$emit （）来触发事件，父组件用$on（）来
+        监昕子组件的事件<br/>
+        <emit-component
+            @increase="handleGetTotal"
+            @reduce="handleGetTotal"
+        ></emit-component>
+        <p>Total: {{ total }}</p>
+        除了用v-on 在组件上监听自定义事件外，也可以监昕DOM 事件，这时可以用.native 修饰符
+        表示监听的是一个原生事件，监听的是该组件的根元素<br/>
+
+        <hr/>
+        在组件上使用v-model <br/>
+        <v-model-emit-component
+            v-model="total2"
+        ></v-model-emit-component>
+        <p>Total2: {{ total2 }}</p>
+
+        <hr/>
+        Vue 提供了子组件索引的方法，用特殊的属性ref
+        来为子组件指定一个索引名称 <br/>
+        <my-component ref="refcomp"></my-component>
+        <button @click="getRefMessage">通过Ref获取子组件</button>
+
+        <hr/>
+        一些基本知识： <br/>
+        在子组件中，使用this.$parent 可以直接访问该组件的父实例或组件，父组件也可以通过
+        this.$children 访问它所有的子组件，而且可以递归向上或向下无线访问， 直到根实例或最内层的组
+        件。<br/>
+
+
+    </div>
+    <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+    <script>
+        Vue.component('my-component', {
+            template: '<div>{{ message }}</div>',
+            data: function () {
+                return {
+                    message: '这是一个组件！'
+                }
+            }
+        });
+
+        var counter1 = {
+            count: 0
+        };
+        Vue.component('influence-component', {
+            template: '<button @click="count++">{{ count }}</button>',
+            data: function () {
+                return counter1;
+            }
+        });
+
+        Vue.component('individual-component', {
+            template: '<button @click="count++">{{ count }}</button>',
+            data: function () {
+                return {
+                    count: 0
+                }
+            }
+        });
+
+        Vue.component('props-component', {
+            props: ['warningMessage'],
+            template: '<div>父组件传下来的消息: {{ warningMessage }}</div>'
+        });
+
+        Vue.component('props-obj-component', {
+            props: {
+                propA: Number,
+                propC: {
+                    type: Boolean,
+                    default: true
+                },
+                propD: {
+                    type: String,
+                    required: true
+                },
+                propE: {
+                    type: Array,
+                    default: function() {
+                        return [];
+                    }
+                },
+                propF: {
+                    validator: function (value) {
+                        return value > 10;
+                    }
+                }
+            },
+            template: '<div>默认propC的值: {{ propC }}</div>'
+        });
+
+        Vue.component('emit-component', {
+           template: '\
+           <div>\
+                <button @click="handleIncrease">+</button>\
+                <button @click="handleReduce">-</button>\
+           </div>',
+            data: function () {
+                return {
+                    count: 0
+                }
+            },
+            methods: {
+               handleIncrease: function () {
+                   this.count++;
+                   this.$emit('increase', this.count);
+               },
+                handleReduce: function () {
+                    this.count--;
+                    this.$emit('reduce', this.count);
+                }
+            }
+
+        });
+
+        Vue.component('v-model-emit-component', {
+            template: '\
+           <div>\
+                <button @click="handleIncrease">+</button>\
+                <button @click="handleReduce">-</button>\
+           </div>',
+            data: function () {
+                return {
+                    count: 0
+                }
+            },
+            methods: {
+                handleIncrease: function () {
+                    this.count++;
+                    this.$emit('input', this.count);
+                },
+                handleReduce: function () {
+                    this.count--;
+                    this.$emit('input', this.count);
+                }
+            }
+
+        });
+
+        var Child = {
+            template: "<div>这是一个子组件</div>"
+        };
+
+        var app = new Vue({
+            el: '#app',
+            components: {
+                'child-component': Child
+            },
+            data: {
+                warningMessage: '',
+                total: 0,
+                total2: 0
+            },
+            methods: {
+                handleGetTotal: function (value) {
+                    this.total = value;
+                },
+                getRefMessage: function () {
+                    alert(this.$refs.refcomp.message);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

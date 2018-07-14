@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Form</title>
+</head>
+<body>
+    <div id="app">
+        <form action="#">
+            <input type="text" v-model="message" placeholder="请输入内容">
+            <p v-show="message !== ''">输入的内容是: {{ message }} </p>
+
+            <hr/>
+
+            v-model.lazy:
+            <input type="text" v-model.lazy="message2" placeholder="请输入内容">
+            <p v-show="message2 !== ''">输入的内容是: {{ message2 }} </p>
+
+            <hr/>
+
+            v-model.lazy转变在change事件中同步。<br/>
+            v-model.number可以将输入转换为Number类型。<br/>
+            v-model.trim可以自动过滤输入的首尾空格。<br/>
+            v-model还可以用于自定义组件。
+            <hr/>
+
+            <template v-for="language in languages">
+                <input v-model="picked" type="radio" :value="language.value">
+                <label :for="language.value">{{language.label}}</label>
+            </template>
+            <p>选中的是： {{ picked }}</p>
+
+            <hr/>
+
+            <template v-for="language in languages">
+                <input type="checkbox" v-model="checked" :value="language.value">
+                <label :for="language.value">{{language.label}}</label>
+            </template>
+            <p>选中的是: {{ checked }}</p>
+
+            <hr/>
+            <select v-model="selected" multiple>
+                <template v-for="language in languages">
+                    <option :value="language.value">{{language.label}}</option>
+                </template>
+            </select>
+            <p>选中的是: {{ selected }}</p>
+
+            <hr/>
+            <select v-model="selected2">
+                <option v-for="language in languages" :value="language.value">{{language.label}}</option>
+            </select>
+            <p>选中的是: {{ selected2 }}</p>
+
+            <hr/>
+            <input type="checkbox" v-model="toggle" :true-value="toggleTrueValue" :false-value="toggleFalseValue">
+            <p>Toggle: {{ toggle }}</p>
+            <p> toggleTrueValue: {{ toggleTrueValue }}</p>
+            <p> toggleFalseValue: {{ toggleFalseValue }}</p>
+
+
+            <hr/>
+
+
+        </form>
+    </div>
+    <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: '',
+                message2: '',
+                picked: 'html',
+                checked: ['js', 'css'],
+                selected: ['js', 'css'],
+                selected2: 'js',
+                toggle: 'a',
+                toggleTrueValue: 'b',
+                toggleFalseValue: 'a',
+                languages: [
+                    {
+                        value: 'js',
+                        label: 'Javascript'
+                    },
+                    {
+                        value: 'html',
+                        label: 'HTML'
+                    },
+                    {
+                        value: 'css',
+                        label: 'CSS'
+                    }
+                ]
+            }
+        });
+
+    </script>
+</body>
+</html>

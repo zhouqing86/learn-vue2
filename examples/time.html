@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Time</title>
+</head>
+<body>
+    <div id="app">
+        {{ time }}
+    </div>
+    <div id="app2">
+        <span v-html="link"></span>
+    </div>
+    <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+    <script>
+        var app = new Vue({
+           el: '#app',
+           data: {
+               time: new Date()
+           },
+           mounted: function () {
+               var _this = this;
+               this.timer = setInterval(function() {
+                   _this.date = new Date();
+               }, 1000);
+           },
+            beforeDestroy: function () {
+                if (this.timer) {
+                    clearInterval(this.timer);
+                }
+            }
+        });
+        var app2 = new Vue({
+            el: '#app2',
+            data: {
+                link: '<a href="这是一个连接">连接</a>'
+            }
+        });
+    </script>
+</body>
+</html>

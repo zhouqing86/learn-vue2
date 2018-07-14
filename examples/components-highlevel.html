@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Components High Level</title>
+</head>
+<body>
+    <div id="app">
+        组件递归调用，其可以用来开发一些具有未知层级关系的独立组件：<br/>
+        <recursive-component :count="1"></recursive-component>
+
+        <hr/>
+
+        <inline-component inline-template>
+            <div>
+                <h2>在父组件中定义子组件的模板</h2>
+                <p>从父组件中拿到消息：{{ message }}</p>
+                <p>从子组件中拿到消息: {{ msg }}</p>
+            </div>
+        </inline-component>
+        注意，经过试验，发现message拿的还是子组件的变量，如果子组件没有定义将报错。<br/>
+
+        <hr/>
+        动态组件<br/>
+        <component :is="currentView"></component>
+        <button @click="handleChangeView('A')">切换到A</button>
+        <button @click="handleChangeView('B')">切换到B</button>
+        <button @click="handleChangeView('C')">切换到C</button>
+
+        <hr/>
+        异步组件<br/>
+        好在Vue.js 允许将组件定义为一个工厂函数，动态地解析组件。
+        Vue. 只在组件需要渲染时触发工厂函数， 并且把结果缓存起来，用于后面的再次渲染。<br/>
+        <async-component></async-component>
+
+        <hr/>
+        手动挂载<br/>
+        <div id="mount-div">
+
+        </div>
+
+    </div>
+    <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+    <script>
+        Vue.component("recursive-component", {
+            name: 'recursive-component',
+            props: {
+                count: {
+                    type: Number,
+                    default: 1
+                }
+            },
+            template: '\
+            <div class="child">\
+                {{ count }}\
+                <recursive-component :count="count + 1" v-if="count < 3"></recursive-component> \
+            </div>\
+            '
+        });
+
+        Vue.component("inline-component", {
+           data: function () {
+               return {
+                   msg: '在子组件声明的数据',
+                   message: '子组件声明的数据2'
+               }
+           }
+        });
+
+        Vue.component("async-component", function (resolve, reject) {
+            window.setTimeout(function () {
+                resolve({
+                    template: '<div>我是异步渲染的</div>'
+                })
+            });
+        });
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: '父组件的消息',
+                currentView: 'comA'
+            },
+            components: {
+                comA: {
+                    template: '<div>组件A</div>'
+                },
+                comB: {
+                    template: '<div>组件B</div>'
+                },
+                comC: {
+                    template: '<div>组件C</div>'
+                }
+            },
+            methods: {
+                handleChangeView: function (component) {
+                    this.currentView = 'com' + component;
+                }
+            }
+        });
+
+        var MyComponent = Vue.extend({
+            template: '<div>你好: {{ name }}</div>',
+            data: function () {
+                return {
+                    name: 'Qing'
+                }
+            }
+        });
+        new MyComponent().$mount("#mount-div");
+
+    </script>
+</body>
+</html>

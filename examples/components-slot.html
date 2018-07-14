@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Components Slot</title>
+</head>
+<body>
+    <div id="app">
+        props 传递数据、events 触发事件和slot 内容分发就构成了Vue 组件的3 个API 来源，再复
+        杂的组件也是由这3 部分构成的。<br/>
+
+        <child-component>
+            <p>替换子组件中slot的内容</p>
+            <p>替换子组件中slot的内容2222</p>
+        </child-component>
+
+        <hr/>
+
+        多个Slot的情况：<br/>
+        <multi-slot-component>
+            <h1 slot="header">这是标题</h1>
+            <p>正文内容</p>
+            <p>正文内容2222</p>
+            <div slot="footer">这是底部信息</div>
+        </multi-slot-component>
+
+        <hr/>
+
+        作用于插槽: <br/>
+        <domain-slot-component :books="books">
+            <template slot="book" scope="props">
+                <li>{{ props.bookName }}</li>
+            </template>
+        </domain-slot-component>
+    </div>
+    <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+    <script>
+        Vue.component('child-component', {
+           template: '\
+           <div>\
+                <slot>\
+                    <p>如果子组件没有插入内容，将默认出现！</p>\
+                </slot>\
+           </div>\
+           '
+        });
+
+        Vue.component('multi-slot-component', {
+           template: '\
+           <div class="container">\
+                <div class="header">\
+                    <slot name="header"></slot>\
+                </div>\
+                <div class="content">\
+                    <slot></slot>\
+                </div>\
+                <div class="footer">\
+                    <slot name="footer"></slot>\
+                </div>\
+           </div>\
+           '
+        });
+
+        Vue.component('domain-slot-component', {
+            props: {
+                books: {
+                    type: Array,
+                    default: function () {
+                        return [];
+                    }
+                }
+            },
+            template: '\
+            <div>\
+                <slot name="book" v-for="book in books" :book-name="book.name"></slot> \
+            </div>\
+            '
+        });
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                books: [
+                    { name: 'Vue.js实战' },
+                    { name: 'Javascript语言精粹' },
+                    { name: 'Javascript高级程序设计' }
+                ]
+            }
+        })
+    </script>
+</body>
+</html>

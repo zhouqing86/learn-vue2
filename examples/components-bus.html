@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Components Bus</title>
+</head>
+<body>
+    <div id="app">
+        {{message}}
+        <component-a></component-a>
+        当你的项目比较大，有更多的小伙伴参与开发时，也可以选择更好的状态管理解决方案。<br/>
+    </div>
+    <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+    <script>
+        var bus = new Vue();
+        Vue.component('component-a', {
+           template: '<button @click="buttonClick">发送消息</button>',
+            methods: {
+                buttonClick: function () {
+                    bus.$emit('on-message', '来自组件component-a的内容');
+                }
+            }
+        });
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: ''
+            },
+            mounted: function () {
+                var _this = this;
+                bus.$on('on-message', function (msg) {
+                   _this.message = msg;
+                });
+            }
+        })
+    </script>
+</body>
+</html>
