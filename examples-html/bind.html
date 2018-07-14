@@ -29,7 +29,15 @@
         点击次数 {{counter}}
         <button @click="counter++">+ 1</button>
     </div>
+    <div id="app5">
+        <anchor title="这是一个标题"></anchor>
+    </div>
     <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
+    <script type="text/x-template" id="anchor">
+        <div>
+            <a href="#">{{ title }}</a>
+        </div>
+    </script>
     <script>
         var app = new Vue({
            el: '#app',
@@ -74,7 +82,23 @@
             data: {
                 counter: 0
             }
-        })
+        });
+
+        Vue.component('anchor', {
+            template: '#anchor',
+            props: {
+                title: {
+                    type: String,
+                    default: ''
+                }
+            }
+        });
+        var app5 = new Vue({
+           el: '#app5',
+            data: {
+
+            }
+        });
     </script>
 </body>
 </html>
