@@ -4,17 +4,23 @@ var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var merge = require('webpack-merge');
 var webpackBaseConfig =require('./webpack.config.js');
 var VueLoaderPlugin = require('vue-loader/lib/plugin');
+var UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+var OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin');
 
 webpackBaseConfig.plugins = [];
 
 module.exports = merge(webpackBaseConfig, {
+    entry: {
+        main: './src/main',
+        vendor: ['vue']
+    },
     output: {
        publicPath: '/dist/',
-       filename: '[name].[hash:8].js'
+       filename: '[name].[chunkhash:8].js'
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: "[name].[hash:8].css",
+            filename: "[name].[chunkhash:8].css",
             chunkFilename: "[id].css"
         }),
         new VueLoaderPlugin(),
@@ -28,5 +34,15 @@ module.exports = merge(webpackBaseConfig, {
             template: './index.ejs',
             inject: false
         })
-    ]
+    ],
+    optimization: {
+        minimizer: [
+            new UglifyJsPlugin({
+                cache: true,
+                parallel: true,
+                sourceMap: true
+            }),
+            new OptimizeCSSPlugin({})
+        ]
+    }
 });

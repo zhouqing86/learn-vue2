@@ -52,5 +52,17 @@ Replace extract-text-webpack plugin with mini-css-extract-plugin
 
 ```
 npm install mini-css-extract-plugin --save-dev
+npm install optimize-css-assets-webpack-plugin --save-dev
 ```
+
+注意Entry中区分了main和vendor。另为了使得vendor的hash值与main的hash值不一样，使用了chunkhash而不是hash。
+
+
+
+
+
+
+
+
+
 

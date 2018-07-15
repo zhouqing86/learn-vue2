@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>hello {{ name }}</h1>
-        <v-title title="Vue组件化"></v-title>
+        <v-title title="Vue组件化title"></v-title>
         <v-button @click="handleClick">点击按钮</v-button>
     </div>
 
