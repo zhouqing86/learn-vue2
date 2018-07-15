@@ -11,7 +11,11 @@ npm install --save vue-router
 ```
 
 
+### Add Vuex
 
+```
+npm install --save vuex
+```
 
 
 
