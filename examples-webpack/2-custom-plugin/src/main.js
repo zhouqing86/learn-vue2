@@ -7,11 +7,24 @@ Vue.use(VueRouter);
 const Routers = [
     {
         path: '/index',
+        meta: {
+            title: '首页'
+        },
         component: (resolve) => require(['./views/index.vue'], resolve)
     },
     {
         path: '/about',
+        meta: {
+            title: '关于'
+        },
         component: (resolve) => require(['./views/about.vue'], resolve)
+    },
+    {
+        path: '/user/:id',
+        meta: {
+            title: '个人首页'
+        },
+        component: (resolve) => require(['./views/user.vue'], resolve)
     },
     {
         path: '*',
@@ -25,6 +38,14 @@ const RouterConfig = {
 };
 
 const router = new VueRouter(RouterConfig);
+
+router.beforeEach((to, from, next) => {
+   window.document.title = to.meta.title;
+   next();
+});
+router.afterEach((to, from, next) => {
+    window.scrollTo(0, 0);
+});
 
 new Vue({
     el: '#app',
